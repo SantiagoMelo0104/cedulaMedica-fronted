@@ -2,12 +2,12 @@ import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
-    apiKey: "",
+    apiKey: import.meta.env.VITE_APIKEY,
     authDomain: "cedulamedica.firebaseapp.com",
     projectId: "cedulamedica",
     storageBucket: "cedulamedica.appspot.com",
-    messagingSenderId: "160905848661",
-    appId: "1:160905848661:web:1fcb42ba54bf092df6b1dc",
+    messagingSenderId: import.meta.env.VITE_MESSAGE_SENDER_ID,
+    appId: import.meta.env.VITE_APP_ID,
     measurementId: "G-G09SSZS8SG"
 };
 
