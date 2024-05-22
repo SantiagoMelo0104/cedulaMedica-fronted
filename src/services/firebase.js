@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCrQJBjLEpp2Tijrfu2Fwd4DAT0fckSjYQ",
+    apiKey: "",
     authDomain: "cedulamedica.firebaseapp.com",
     projectId: "cedulamedica",
     storageBucket: "cedulamedica.appspot.com",
