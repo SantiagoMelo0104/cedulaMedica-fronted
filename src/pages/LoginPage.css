@@ -1,0 +1,109 @@
+body {
+    font-family: "Montserrat", "Arial", sans-serif;
+    /*background: linear-gradient(rgba(220, 234, 237, 0.7), rgba(220, 234, 237, 0.7)),url(http://res.cloudinary.com/jenelle-miller/image/upload/v1518619522/doodles_cuau2z.png) repeat;*/
+    height: 100%;
+}
+
+.card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 32px;
+    box-shadow: 0 15px 88px -37px rgba(0, 0, 0, 0.17);
+    width: 520px;
+    margin-top: 100px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+form {
+    text-transform: capitalize;
+    font-family: "Lato", "Arial", sans-serif;
+    text-align: center;
+}
+
+input {
+    width: 300px;
+    margin-bottom: 15px;
+    border-radius: 30px;
+    border: 1px solid #ddd;
+    padding: 15px 20px;
+    font-size: 0.9rem;
+    transition: 0.4s;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    &:focus {
+        border-color: #8D6CC7;
+        outline: none;
+    }
+}
+
+[type="button"] {
+    background: #8D6CC7;
+    border-radius: 30px;
+    padding: 16px 20px;
+    width: 270px;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    transition: 0.4s;
+    font-family: "Montserrat", "Arial", sans-serif;
+    border: none;
+    box-shadow: none;
+    margin: 0 auto;
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+
+
+    &:hover {
+        background: #5f4b80;
+        cursor: pointer;
+    }
+}
+
+.google-logo {
+    height: 1.5rem;
+
+    margin-right: 1rem;
+
+    margin-top: 0;
+
+    margin-bottom: 0;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+    color: #333;
+
+    > div {
+        margin: 0 auto;
+    }
+}
+
+.form-group label {
+    text-align: left;
+    margin-right: 0;
+    padding-right: 10px;
+}
+
+.form-group input {
+    width: 300px;
+    margin-bottom: 15px;
+    border-radius: 30px;
+    border: 1px solid #ddd;
+    padding: 15px 20px;
+    font-size: 0.9rem;
+    transition: 0.4s;
+}
