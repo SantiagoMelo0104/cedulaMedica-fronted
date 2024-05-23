@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import authService from "../services/firebase.js";
 import "./UserDataMedicalPage.css";
+import authService from "../services/firebase.js";
 
 function UserDataMedicalPage() {
     const navigate = useNavigate();
+    const [formIsValid, setFormIsValid] = useState(false);
 
     useEffect(() => {
         const checkUser = async () => {
@@ -30,20 +31,40 @@ function UserDataMedicalPage() {
             ...formData,
             [event.target.name]: event.target.value,
         });
-    };
 
-    const handleSelectChange = (event) => {
-        setFormData({
-            ...formData,
-            bloodType: event.target.value,
-        });
+        if (event.target.name === "bloodType" && event.target.value !== "") {
+            setFormIsValid(true);
+        } else if (event.target.name !== "bloodType" && event.target.value !== "") {
+            const isFormValid = Object.values(formData).every(val => val !== "");
+            setFormIsValid(isFormValid);
+        }
     };
 
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        // Aquí puedes enviar los datos del formulario al servidor
-        console.log(formData);
+        if (!formIsValid) {
+            alert("Por favor, complete todos los campos obligatorios.");
+            return;
+        }
+
+        fetch("/api/medical-data", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(formData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                alert("Los datos médicos se han guardado exitosamente.");
+                navigate("/");
+            })
+            .catch(error => {
+                console.error(error);
+                alert("Ha ocurrido un error al guardar los datos médicos.");
+            });
     };
 
     return (
@@ -73,31 +94,34 @@ function UserDataMedicalPage() {
                 <label htmlFor="gender">Género:</label>
                 <select id="gender" name="gender" value={formData.gender} onChange={handleInputChange}>
                     <option value=""></option>
-                    <option value="Masculino">Masculino</option>
-                    <option value="Femenino">Femenino</option>
-                    <option value="Otro">Otro</option>
+                    <option value="M">Masculino</option>
+                    <option value="F">Femenino</option>
+                    <option value="O">Otro</option>
                 </select>
                 <br />
 
                 <label htmlFor="bloodType">Tipo de sangre:</label>
-                <select id="bloodType" name="bloodType" value={formData.bloodType} onChange={handleSelectChange}>
-                    <option value=""></option>
-                    <option value="A+">A+</option>
-                    <option value="A-">A-</option>
-                    <option value="B+">B+</option>
-                    <option value="B-">B-</option>
-                    <option value="AB+">AB+</option>
-                    <option value="AB-">AB-</option>
-                    <option value="O+">O+</option>
-                    <option value="O-">O-</option>
-                </select>
+                <input
+                    type="text"
+                    id="bloodType"
+                    name="bloodType"
+                    value={formData.bloodType}
+                    onChange={handleInputChange}
+                />
                 <br />
 
                 <label htmlFor="allergies">Alergias:</label>
-                <textarea id="allergies" name="allergies" value={formData.allergies} onChange={handleInputChange}></textarea>
+                <textarea
+                    id="allergies"
+                    name="allergies"
+                    value={formData.allergies}
+                    onChange={handleInputChange}
+                ></textarea>
                 <br />
 
-                <button type="submit">Guardar</button>
+                <button type="submit" disabled={!formIsValid}>
+                    Guardar
+                </button>
             </form>
         </div>
     );
