@@ -1,18 +1,73 @@
 import { useNavigate } from "react-router-dom";
-import authService from "../services/firebase.js";
+import { authService } from "../services/firebase.js";
 import './LoginPage.css';
+// import { collection, getDocs, query, where } from "firebase/firestore";
 
 function LoginCard() {
     const navigate = useNavigate();
 
     const handleGoogleLogin = async () => {
         try {
-            const result = await authService.signInWithPopup();
-            navigate("/medical-data", { state: { user: result.user } });
+            const user = await authService.signInWithPopup();
+            if (user) {
+                const userId = user.uid;
+                const token = await user.getIdToken();
+                const email = user.email;
+                const hasRegister = await hasUserRegister(userId, token, email);
+                // const hasMedicalData = await hasMedicalDataCheck(userId, token);
+                 const userData = {
+                    displayName: user.displayName,
+                    email: user.email,
+                    photoURL: user.photoURL,
+                };
+                navigate(hasRegister ? "/Homepage" : "/medical-data", { state: { userData } });
+                console.error(email)
+            } else {
+                console.error("No se pudo autenticar con Google");
+            }
         } catch (error) {
             console.error(error);
         }
     };
+    const hasUserRegister = async (email) => {
+        try {
+            const jsonBody = JSON.stringify({ email });
+
+            const response = await fetch('https://avvplvfar6.execute-api.us-east-1.amazonaws.com/Despliegue/findByEmail', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: jsonBody
+            });
+            
+            if (response.ok) {
+                const data = await response.text();
+                console.log(data);
+                if (data.exists) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                const errorMessage = await response.text();
+                console.error("Error al verificar el registro del usuario:", errorMessage);
+                return null;
+            }
+        } catch (error) {
+            console.error("Error al verificar el registro del usuario:", error);
+            return null;
+        }
+    };
+    // const checkMedicalData = async (userId) => {
+    //     const medicalDataRef = collection(db, "cedulamedica");
+    //     const medicalDataQuery = query(medicalDataRef, where("userId", "==", userId));
+    //     const querySnapshot = await getDocs(medicalDataQuery);
+    //     return querySnapshot.size > 0;
+    // };
+
+    //https://avvplvfar6.execute-api.us-east-1.amazonaws.com/Despliegue/createUser
+
 
     return (
         <div className="card login-card">

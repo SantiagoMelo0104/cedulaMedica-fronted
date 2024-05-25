@@ -1,5 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import {getFirestore} from "firebase/firestore";
+
+
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_APIKEY,
@@ -14,6 +17,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
 const authService = {
     async signInWithPopup() {
@@ -38,6 +42,16 @@ const authService = {
     async getCurrentUser() {
         return auth.currentUser;
     },
+
+    async getAuthToken() {
+        const user = auth.currentUser;
+        if (user) {
+            const tokenResult = await user.getIdTokenResult();
+            return tokenResult.token;
+        } else {
+            return null;
+        }
+    },
 };
 
-export default authService;
+export  {authService, db};
