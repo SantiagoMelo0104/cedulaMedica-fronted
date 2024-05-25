@@ -52,6 +52,7 @@ const authService = {
             return null;
         }
     },
+
 };
 
 export  {authService, db};

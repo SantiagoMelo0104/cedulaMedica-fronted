@@ -1,9 +1,11 @@
-body {
-    font-family: "Montserrat", "Arial", sans-serif;
-    /*background: linear-gradient(rgba(220, 234, 237, 0.7), rgba(220, 234, 237, 0.7)),url(http://res.cloudinary.com/jenelle-miller/image/upload/v1518619522/doodles_cuau2z.png) repeat;*/
-    height: 100%;
-}
 
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
 .card {
     background: #fff;
     border-radius: 10px;

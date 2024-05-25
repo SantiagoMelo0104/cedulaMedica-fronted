@@ -34,7 +34,8 @@ function Homepage() {
     };
 
     const handleRegister = () => {
-        navigate('/ViewDataMedical', { state: { email: user.email } });
+        const userData = JSON.stringify(user);
+        navigate('/ViewDataMedical', { state: { userData } });
     };
 
     const toggleSidebar = () => {
@@ -45,14 +46,11 @@ function Homepage() {
         <div className="container">
             <header className="header">
                 <h1>Bienvenido, {user?.displayName || "usuario"}</h1>
+                {user?.photoURL && <img src={user.photoURL} alt="Foto de perfil" className="profile-picture" />}
                 <div className="header-right">
-                    <img src={user?.photoURL || ""} alt="Foto de perfil" />
                     <Sidebar isOpen={showSidebar} onClose={toggleSidebar} />
-
                 </div>
             </header>
-
-
 
             <main className="content">
                 <h2>Contenido principal</h2>

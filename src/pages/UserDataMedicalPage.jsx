@@ -103,25 +103,7 @@ function UserDataMedicalPage() {
             console.error(error);
         }
     };
-    //-------------------Peticiones API-Java-------------------------------
-    // const handleSaveClick = async (event) => {
-    //     event.preventDefault();
-    //     try {
-    //         formData.userId = userId;
-    //         const user = await authService.getCurrentUser();
-    //         const token = await user.getIdToken();
-    //         const response = await axios.post('http://localhost:5175/api/medical-data', formData, {
-    //             headers: {
-    //                 Authorization: `Bearer ${token}`,
-    //
-    //     }
-    //     });
-    //         console.log(response.data);
-    //         navigate('/Homepage');
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // };
+
 
     return (
         <div>

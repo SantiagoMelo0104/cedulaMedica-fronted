@@ -1,222 +1,117 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { authService} from "../services/firebase.js";
-import { collection, getFirestore, setDoc,doc } from "firebase/firestore";
-import axios from "axios";
-import { useLocation } from "react-router-dom";
+import {useState, useEffect} from 'react';
+import {authService} from "../services/firebase.js";
+import {useNavigate} from "react-router-dom";
+import "./ViewDataMedicalPage.css"
 
-function ViewDataMedicalPage() {
-    const firestore = getFirestore();
-    const medicalDataRef = collection(firestore, "cedulamedica");
-    const location = useLocation();
-
+const UserDataPage = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
-    const [medicalData, setMedicalData] = useState({
-        name: "",
-        lastName: "",
-        age: "",
-        gender: "",
-        bloodType: "",
-        bloodTypePositive: "",
-        allergies: "",
-        diseases: "",
-        medications: "",
-        documentType: "",
-        document: "",
-
-    });
-    const getMedicalData = async (email) => {
-        try {
-            const response = await axios.get(`https://avvplvfar6.execute-api.us-east-1.amazonaws.com/Despliegue/findByEmail?email=${email}`);
-            return response.data;
-        } catch (error) {
-            if (error.response) {
-                const errorData = error.response.data;
-                if (errorData && typeof errorData === 'object') {
-                    const errorMessage = errorData.message || 'Error desconocido';
-                    console.error(errorMessage);
-                    // Maneja el error de la API aquí
-                    return null;
-                }
-            }
-            console.error(error);
-            // Maneja otros errores aquí
-            return null;
-        }
-    };
-
-    const saveMedicalData = async (uid, medicalData) => {
-        try {
-            await setDoc(doc(medicalDataRef, uid), medicalData);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-    const [isHidden, setIsHidden] = useState(false);
-    const [isEditable, setIsEditable] = useState(false);
+    const [data, setData] = useState(null);
+    const [isRegistered, setIsRegistered] = useState(false);
+    let email1;
 
     useEffect(() => {
-
         const checkUser = async () => {
-
             const user = await authService.getCurrentUser();
+            email1 = user.email;
             if (!user) {
                 navigate("/");
             } else {
                 setUser(user);
+
+                const isRegistered = await hasUserRegister(email1);
+                setIsRegistered(isRegistered);
             }
         };
 
         checkUser();
+    }, [navigate]);
 
-        const getData = async () => {
-            const data = await getMedicalData(user.email);
-            if (data) {
-                setMedicalData(data);
-            }
-
-        }
-
-        if (user) {
-
-            getData();
-
-        }
-
-    }, [navigate, user]);
-
-    const handleSaveMedicalData = async () => {
+    const hasUserRegister = async (email1) => {
         try {
-            await saveMedicalData(user.uid, medicalData);
-            navigate("/homepage");
+            const jsonBody = JSON.stringify(email1);
+            const response = await fetch('https://avvplvfar6.execute-api.us-east-1.amazonaws.com/Despliegue/findByEmailEnc', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: jsonBody
+            });
+
+            if (!response.ok) {
+                console.error("Error while fetching user data:", response.statusText);
+                return false;
+            }
+            const data = await response.json();
+            setData(data); // Set the data state with the user's information
+            return response.ok && data.email !== null;
         } catch (error) {
-            console.error(error);
+            console.error("Error while verifying user registration:", error);
+            return false;
         }
     };
 
-    const handleToggleHidden = () => {
-        setIsHidden(!isHidden);
-    };
+    useEffect(() => {
+        const userEmail = localStorage.getItem('userEmail');
+        if (userEmail) {
+            setEmail(userEmail);
+        }
+    }, []);
 
-    const handleEdit = () => {
-        setIsEditable(true);
-    };
+    if (!isRegistered) {
+        return <div>Cargando...</div>;
+    }
+
 
     return (
-
-        <div>
-
-            <h1>Datos médicos</h1>
-
-            {isHidden ? (
-
-                <p>Datos médicos ocultos</p>
-
-            ) : (
-
-                <form>
+        <div className="user-data-page">
+            <h1>Datos del usuario</h1>
+            <div className="row">
+                <div className="col-1">
                     <label>Nombre:</label>
-                    <input
-                        type="text"
-                        value={medicalData.name}
-                        onChange={(e) => setMedicalData({...medicalData, name: e.target.value})}
-                        disabled={!isEditable}
-                    />
-                    <br/>
+                    <input type="text" value={data?.name || ""} readOnly/>
+                </div>
+                <div className="col-2">
                     <label>Apellidos:</label>
-                    <input
-                        type="text"
-                        value={medicalData.lastName}
-                        onChange={(e) => setMedicalData({...medicalData, lastName: e.target.value})}
-                        disabled={!isEditable}
-                    />
-                    <br/>
-                    <label>Edad:</label>
-                    <input
-                        type="number"
-                        value={medicalData.age}
-                        onChange={(e) => setMedicalData({...medicalData, age: e.target.value})}
-                        disabled={!isEditable}
-                    />
-                    <br/>
-                    <label>Género:</label>
-                    <input
-                        type="text"
-                        value={medicalData.gender}
-                        onChange={(e) => setMedicalData({...medicalData, gender: e.target.value})}
-                        disabled={!isEditable}
-                    />
-                    <br/>
-                    <label>Tipo de sangre:</label>
-                    <input
-                        type="text"
-                        value={medicalData.bloodType}
-                        onChange={(e) => setMedicalData({...medicalData, bloodType: e.target.value})}
-                        disabled={!isEditable}
-                    />
-                    <br/>
-                    <label>Positivo:</label>
-                    <input
-                        type="text"
-                        value={medicalData.bloodTypePositive}
-                        onChange={(e) => setMedicalData({...medicalData, bloodTypePositive: e.target.value})}
-                        disabled={!isEditable}
-                    />
-                    <br/>
-                    <label>Alergias:</label>
-                    <textarea
-                        value={medicalData.allergies}
-                        onChange={(e) => setMedicalData({...medicalData, allergies: e.target.value})}
-                        disabled={!isEditable}
-                    />
-                    <br/>
-                    <label>Enfermedades:</label>
-                    <textarea
-                        value={medicalData.diseases}
-                        onChange={(e) => setMedicalData({...medicalData, diseases: e.target.value})}
-                        disabled={!isEditable}
-                    />
-                    <br/>
-                    <label>Medicamentos:</label>
-                    <textarea
-                        value={medicalData.medications}
-                        onChange={(e) => setMedicalData({...medicalData, medications: e.target.value})}
-                        disabled={!isEditable}
-                    />
-                    <br/>
+                    <input type="text" value={data?.lastName || ""} readOnly/>
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-1">
                     <label>Tipo de documento:</label>
-                    <input
-                        type="text"
-                        value={medicalData.documentType}
-                        onChange={(e) => setMedicalData({...medicalData, documentType: e.target.value})}
-                        disabled={!isEditable}
-                    />
-                    <br/>
+                    <input type="text" value={data?.documentType || ""} readOnly/>
+                </div>
+                <div className="col-2">
                     <label>Documento:</label>
-                    <input
-                        type="text"
-                        value={medicalData.document}
-                        onChange={(e) => setMedicalData({...medicalData, document: e.target.value})}
-                        disabled={!isEditable}
-                    />
-                    <br/>
-                    {isEditable ? (
-                        <button type="button" onClick={handleSaveMedicalData}>
-                            Guardar cambios
-                        </button>
-                    ) : (
-                        <button type="button" onClick={handleEdit}>
-                            Editar datos
-                        </button>
-                    )}
-                </form>
-
-            )}
-
-        </div>
-
-    );
-}
-
-export default ViewDataMedicalPage;
+                    <input type="text" value={data?.document || ""} readOnly/>
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-1">
+                    <label>Sexo:</label>
+                    <input type="text" value={data?.sex || ""} readOnly/>
+                </div>
+                <div className="col-2">
+                    <label>Tipo de sangre:</label>
+                    <input type="text" value={data?.bloodType || ""} readOnly/>
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-1">
+                        <label>Edad:</label>
+                        <input type="text" value={data?.age || ""} readOnly/>
+                </div>
+                <div className="col-2">
+                        <label>Alergias:</label>
+                        <textarea value={data?.allergies || ""} readOnly/>
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-1">
+                    <label>Enfermedades crónicas:</label>
+                    <textarea value={data?.chronicDiseases || ""} readOnly/>
+                </div>
+            </div>
+        </div>);
+            };
+export default UserDataPage;
