@@ -8,7 +8,6 @@ const UserDataPage = () => {
     const [user, setUser] = useState(null);
     const [data, setData] = useState(null);
     const [isRegistered, setIsRegistered] = useState(false);
-    const [errors, setErrors] = useState({});
     let email1;
 
     useEffect(() => {
@@ -62,17 +61,7 @@ const UserDataPage = () => {
     if (!isRegistered) {
         return <div>Cargando...</div>;
     }
-    const validateForm = () => {
-        const requiredFields = ['name', 'lastName', 'documentType', 'document']; // campos obligatorio
-        let isValid = true;
-        requiredFields.forEach((field) => {
-            if (!data[field]) {
-                setErrors((prevErrors) => ({ ...prevErrors, [field]: `El campo ${field} es obligatorio` }));
-                isValid = false;
-            }
-        });
-        return isValid;
-    };
+
 
 
     return (
