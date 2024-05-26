@@ -65,12 +65,12 @@ function UserDataMedicalPage() {
             });
         }
 
-        // Verificar que todos los campos requeridos estén llenos y que el valor seleccionado sea diferente de la primera opción
+
         const isSelectValid = name === "documentType" && name === "bloodType" && name === "sex" ? value !== "" : true;
         const areRequiredFieldsValid = ["name","lastName","document", "documentType", "bloodType", "age", "sex"].every((field) => formData[field] !== "");
         setFormIsValid(isSelectValid && areRequiredFieldsValid);
     };
-    //-----------------------Peticiones AWS-----------------------
+
     const handleSaveClick = async (event) => {
         event.preventDefault();
         try {

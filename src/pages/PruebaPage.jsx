@@ -10,7 +10,7 @@ function PruebaPage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get("https://avvplvfar6.execute-api.us-east-1.amazonaws.com/Despliegue/findByEmailEnc"); // Reemplaza con la URL de tu API
+                const response = await axios.get("https://avvplvfar6.execute-api.us-east-1.amazonaws.com/Despliegue/findByEmailEnc");
                 const userData = response.data;
                 setUserData(userData);
                 setLoading(false);

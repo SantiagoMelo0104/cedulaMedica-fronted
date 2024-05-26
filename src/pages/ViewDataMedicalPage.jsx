@@ -43,7 +43,7 @@ const UserDataPage = () => {
                 return false;
             }
             const data = await response.json();
-            setData(data); // Set the data state with the user's information
+            setData(data);
             return response.ok && data.email !== null;
         } catch (error) {
             console.error("Error while verifying user registration:", error);
