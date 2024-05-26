@@ -1,11 +1,15 @@
-# React + Vite
+# CedulaMedica-fronted
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Iniciando 
 
-Currently, two official plugins are available:
+- Para arrancar la aplicacion se debe colocar los siguientes comandos en el IDE de su preferencia:
+  ~~~
+      npm install
+  ~~~
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+  ~~~
+      npm run dev
+  ~~~
 
 ## Prototipo Visual con IA Generativa:
 
@@ -22,6 +26,22 @@ Investigar y seleccionar herramientas de IA Generativa.
     ![image](https://github.com/SantiagoMelo0104/cedulaMedica-fronted/assets/123812926/a7d2631a-b54a-4d3f-843e-5760daab9f8d)
 
     [CedulaMedica_Figma](https://www.figma.com/design/oDhC7PcVHZJwvj6EqyUsMS/Cedula-Medica?node-id=32-17&t=XaQstAoqOKVLuPhe-1)
+
+# React + Vite
+
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+
+Currently, two official plugins are available:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+
+
+## Autores
+
+* **Ximena Rodriguez**
+* **Jordy Bautista**
+* **Santiago Melo** 
 
     
 
