@@ -65,7 +65,7 @@ function Homepage() {
             </main>
 
             <div className="actions">
-                <button onClick={handleSignOut}>Cerrar sesión</button>
+
                 <button onClick={handleRegister}>Registro</button>
             </div>
         </div>
