@@ -30,6 +30,63 @@ function LoginCard() {
         }
     };
 
+    const handleEmailLogin = async () => {
+      const emailIn = document.getElementById('email').value;
+      const passwordIn = document.getElementById('password').value;
+
+      const jsonData = {
+        email: emailIn,
+        password: passwordIn
+      };
+
+      try {
+        const jsonBody = JSON.stringify(jsonData);
+        const response = await fetch('http://localhost:8080/api/auth/authenticate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: jsonBody
+        });
+        const userData = {
+          displayName: emailIn,
+          email: emailIn,
+          photoURL: emailIn
+        };
+        const data = await response.json();
+        const resp = await verifyToken(data.token);
+        navigate(resp ? "/Homepage" : "/medical-data", { state: { userData } });
+      } catch (error) {
+        console.error("Error al autenticar con email y contraseña:", error);
+      }
+    };
+
+    const verifyToken = async (token) => {
+        try {
+            const response = await fetch('http://localhost:8080/auth', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+            });
+
+            // Verifica el estado de la respuesta
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            // Obtén el cuerpo de la respuesta como JSON
+            const data = await response.json();
+            return data;
+
+        } catch (error) {
+            console.error("Error al verificar el registro del usuario:", error);
+            return false;
+        }
+    };
+
+
 
     const hasUserRegister = async (email1) => {
         console.log(email1);
@@ -73,7 +130,7 @@ function LoginCard() {
                         </svg>
                         <span>Iniciar sesión con Google</span>
                     </button>
-                    <button type="button" onClick={handleGoogleLogin} className="btn btn-block btn-google">
+                    <button type="button" onClick={handleEmailLogin} className="btn btn-block btn-google">
                         <span>Iniciar sesión con email y contraseña</span>
                     </button>
 
