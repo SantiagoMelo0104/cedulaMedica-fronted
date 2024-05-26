@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { authService } from "../services/firebase.js";
 import "./HomePage.css";
 import Sidebar from "../components/Sidebar.jsx";
+import QRCode from "qrcode.react";
 
 function Homepage() {
     const navigate = useNavigate();
@@ -35,11 +36,16 @@ function Homepage() {
 
     const handleRegister = () => {
         const userData = JSON.stringify(user);
-        navigate('/ViewDataMedical', { state: { userData } });
+        navigate("/ViewDataMedical", { state: { userData } });
     };
 
     const toggleSidebar = () => {
         setShowSidebar((prev) => !prev);
+    };
+
+    const generateUserDataUrl = () => {
+        const userData = JSON.stringify(user);
+        return `/ViewDataMedical?userData=${userData}`;
     };
 
     return (
@@ -48,14 +54,14 @@ function Homepage() {
                 <h1>Bienvenido, {user?.displayName || "usuario"}</h1>
                 {user?.photoURL && <img src={user.photoURL} alt="Foto de perfil" className="profile-picture" />}
                 <div className="header-right">
-                    <Sidebar isOpen={showSidebar} onClose={toggleSidebar} />
+                    <button onClick={handleSignOut}>Cerrar sesión</button>
                 </div>
             </header>
 
             <main className="content">
                 <h2>Contenido principal</h2>
                 <p>Aquí puedes mostrar el contenido principal de la página.</p>
-                <img src="qr.png" alt="Código QR" />
+                <QRCode value={generateUserDataUrl()} size={400} />
             </main>
 
             <div className="actions">

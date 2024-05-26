@@ -42,41 +42,33 @@ function UserDataMedicalPage() {
 
         if (name === "age") {
             const parsedValue = parseInt(value);
-            if (parsedValue >= 1 && Number.isInteger(parsedValue)) {
+            if (parsedValue >= 1 && Number.isInteger(parsedValue) && parsedValue <=100) {
                 setFormData({
                     ...formData,
                     [name]: parsedValue,
                 });
-
-                // Si el campo de edad es válido, considerar el formulario válido
-                setFormIsValid(true);
             } else {
                 setFormData({
                     ...formData,
                     [name]: "",
                 });
-
-                // Si el campo de edad no es válido, considerar el formulario inválido
-                setFormIsValid(false);
             }
         } else if (event.target.tagName === "SELECT") {
-            // Si es un campo de selección, considerarlo válido si tiene un valor seleccionado
             setFormData({
                 ...formData,
                 [name]: value,
             });
-
-            setFormIsValid(value !== "");
         } else {
             setFormData({
                 ...formData,
                 [name]: value,
             });
-
-            const isFormValid = Object.values(formData).every((val) => val !== "");
-            const areRequiredFieldsValid = ["documentType", "document", "bloodType", "age", "sex"].every((field) => formData[field] !== "");
-            setFormIsValid(isFormValid && areRequiredFieldsValid);
         }
+
+        // Verificar que todos los campos requeridos estén llenos y que el valor seleccionado sea diferente de la primera opción
+        const isSelectValid = name === "documentType" && name === "bloodType" && name === "sex" ? value !== "" : true;
+        const areRequiredFieldsValid = ["name","lastName","document", "documentType", "bloodType", "age", "sex"].every((field) => formData[field] !== "");
+        setFormIsValid(isSelectValid && areRequiredFieldsValid);
     };
     //-----------------------Peticiones AWS-----------------------
     const handleSaveClick = async (event) => {
@@ -138,7 +130,7 @@ function UserDataMedicalPage() {
                         <label htmlFor="documentType">Tipo de documento:</label>
                         <select id="documentType" name="documentType" value={formData.documentType}
                                 onChange={handleInputChange} className="required">
-                            <option value=""></option>
+                            <option value="">seleccione una opción</option>
                             <option value="Cédula de ciudadanía">Cédula de ciudadanía</option>
                             <option value="Tarjeta de identidad">Tarjeta de identidad</option>
                             <option value="Pasaporte">Pasaporte</option>
@@ -162,7 +154,7 @@ function UserDataMedicalPage() {
                     <div className="col-1 ">
                         <label htmlFor="sex">Sexo:</label>
                         <select id="sex" name="sex" value={formData.sex} onChange={handleInputChange} className="required">
-                            <option value=""></option>
+                            <option value="">seleccione una opción</option>
                             <option value="Masculino">Masculino</option>
                             <option value="Femenino">Femenino</option>
                         </select>
@@ -173,7 +165,7 @@ function UserDataMedicalPage() {
                     <div className="col-1">
                         <label htmlFor="bloodType">Tipo de sangre:</label>
                         <select id="bloodType" name="bloodType" value={formData.bloodType} className="required" onChange={handleInputChange}>
-                            <option value=""></option>
+                            <option value="">seleccione una opción</option>
                             <option value="A+">A+</option>
                             <option value="A-">A-</option>
                             <option value="B+">B+</option>
